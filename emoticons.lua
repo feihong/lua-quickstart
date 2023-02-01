@@ -9,6 +9,10 @@ function getChars(s)
   return result
 end
 
+function choice(array)
+  return array[math.random(#array)]
+end
+
 eyes = getChars("^ᵒ♥•ಠ°ಥ・$'")
 mouths = getChars('_◡ᴥ□Д益ェω∀')
 sides_ = getChars('()[]{}《》【】||')
@@ -17,7 +21,17 @@ for i=1,#sides_/2 do
   sides[i] = {sides_[i*2 - 1], sides_[i*2]}
 end
 
--- print(#eyes)
-for _, c in ipairs(eyes) do
-  print(c)
+function generateEmoticon()
+  local eye = choice(eyes)
+  local mouth = choice(mouths)
+  local left, right = table.unpack(choice(sides))
+  return table.concat({left, eye, mouth, eye, right}, '')
+end
+
+print('Emoticon Generator\n')
+n = tonumber(arg[1])
+if n == nil then n = 8 end
+
+for i=1,n do
+  print(generateEmoticon())
 end
