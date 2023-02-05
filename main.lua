@@ -8,10 +8,19 @@ function love.load()
   step = 200
 
   winWidth, winHeight = love.graphics.getDimensions()
+
+  fruits = {'apples'}
+  extraFruits = {'bananas', 'cherry', 'durian', 'elderberry', 'fig', 'grape', 'honeydew'}
 end
 
 function love.draw()
   love.graphics.rectangle("line", x, y, width, height)
+
+  love.graphics.print("Press 'x' to show more fruits", 10, 10)
+
+  for i,fruit in ipairs(fruits) do
+    love.graphics.print(fruit, 10, 30 + 20 * (i-1))
+  end 
 end
 
 function getWithinBounds(v, lower, upper)
@@ -39,5 +48,13 @@ function love.update(dt)
   else
     xDelta = 0
     yDelta = 0
+  end
+end
+
+function love.keypressed(key) 
+  if key == 'x' then
+    local fruit = table.remove(extraFruits, 1)
+    if fruit == nil then fruit = '...' end
+    table.insert(fruits, fruit)
   end
 end
