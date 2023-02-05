@@ -1,17 +1,25 @@
-directions = {'left', 'right', 'up', 'down'}
+function polarToCartesian(r, theta)
+  theta = math.rad(theta)
+  return {x = r * math.cos(theta), y = r * math.sin(theta)}
+end
 
-function getRandomDirection()
-  return directions[math.random(1, 4)]
+function changeRectDeltas(angle)
+  for _, rect in ipairs(rects) do
+    rect.delta = polarToCartesian(rect.speed, angle)
+  end
 end
 
 function makeRectangle()
   local width = math.random(100, 200)
   local height = math.random(100, 200)
+  local speed = math.random(100, 400)
+  local delta = polarToCartesian(speed, math.random(0, 360))
+
   return { 
     x = math.random(0, winWidth - width), 
     y = math.random(0, winHeight - height), 
-    speed = math.random(100, 400),
-    direction = getRandomDirection(),
+    speed = speed,
+    delta = delta,
     width = width,
     height = height,
   }
@@ -44,24 +52,17 @@ end
 
 function love.update(dt)
   for _, rect in ipairs(rects) do
-    if rect.direction == 'right' then 
-      rect.x = rect.x + rect.speed * dt
-    elseif rect.direction == 'left' then
-      rect.x = rect.x - rect.speed * dt
-    elseif rect.direction == 'up' then
-      rect.y = rect.y - rect.speed * dt
-    elseif rect.direction == 'down' then
-      rect.y = rect.y + rect.speed * dt
-    end
+    rect.x = rect.x + rect.delta.x * dt
+    rect.y = rect.y + rect.delta.y * dt
 
-    if rect.x < 0 then 
-      rect.direction = 'right'
+    if rect.x < 0 then
+      rect.delta.x = math.abs(rect.delta.x)
     elseif rect.x > winWidth - rect.width then 
-      rect.direction = 'left'
-    elseif rect.y < 0 then 
-      rect.direction = 'down'
+      rect.delta.x = - math.abs(rect.delta.x)
+    elseif rect.y < 0 then
+      rect.delta.y = math.abs(rect.delta.y)
     elseif rect.y > winHeight - rect.height then
-      rect.direction = 'up'
+      rect.delta.y = - math.abs(rect.delta.y)
     end
   end
 end
@@ -73,13 +74,17 @@ function love.keypressed(key)
     table.insert(fruits, fruit)
   elseif key == 'x' then
     for _, rect in ipairs(rects) do
-      rect.direction = getRandomDirection()
+      rect.delta = polarToCartesian(rect.speed, math.random(0, 360))
     end
   elseif key == 'space' then
     table.insert(rects, makeRectangle())
-  elseif key == 'right' or key == 'left' or key == 'up' or key == 'down' then
-    for _, rect in ipairs(rects) do
-      rect.direction = key
-    end
+  elseif key == 'right' then
+    changeRectDeltas(0)
+  elseif key == 'left' then
+    changeRectDeltas(180)
+  elseif key == 'up' then
+    changeRectDeltas(270)
+  elseif key == 'down' then
+    changeRectDeltas(90)
   end
 end
