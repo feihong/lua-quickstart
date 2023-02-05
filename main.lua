@@ -1,32 +1,28 @@
-function getWithinBounds(v, lower, upper)
-  if v < lower then 
-    return lower
-  elseif v > upper then
-    return upper
-  else
-    return v
-  end
-end
-
 directions = {'left', 'right', 'up', 'down'}
 
+function getRandomDirection()
+  return directions[math.random(1, 4)]
+end
+
 function makeRectangle()
+  local width = math.random(100, 200)
+  local height = math.random(100, 200)
   return { 
-    x = 200, 
-    y = 200, 
+    x = math.random(0, winWidth - width), 
+    y = math.random(0, winHeight - height), 
     speed = math.random(100, 400),
-    direction = directions[math.random(1, 4)],
-    width = math.random(100, 200),
-    height = math.random(50, 150),
+    direction = getRandomDirection(),
+    width = width,
+    height = height,
   }
 end
 
 function love.load()
   math.randomseed(os.time())
 
-  rects = {makeRectangle()}
-
   winWidth, winHeight = love.graphics.getDimensions()
+
+  rects = {makeRectangle()}
 
   fruits = {'apples'}
   extraFruits = {'bananas', 'cherry', 'durian', 'elderberry', 'fig', 'grape', 'honeydew'}
@@ -39,7 +35,7 @@ function love.draw()
   end
 
   love.graphics.setColor(0.7, 0.7, 1, 1)
-  love.graphics.print("Press 'x' to show more fruits", 10, 10)
+  love.graphics.print("Press 'f' to show more fruits", 10, 10)
 
   for i,fruit in ipairs(fruits) do
     love.graphics.print(fruit, 10, 30 + 20 * (i-1))
@@ -58,8 +54,15 @@ function love.update(dt)
       rect.y = rect.y + rect.speed * dt
     end
 
-    rect.x = getWithinBounds(rect.x, 0, winWidth - rect.width)
-    rect.y = getWithinBounds(rect.y, 0, winHeight - rect.height)
+    if rect.x < 0 then 
+      rect.direction = 'right'
+    elseif rect.x > winWidth - rect.width then 
+      rect.direction = 'left'
+    elseif rect.y < 0 then 
+      rect.direction = 'down'
+    elseif rect.y > winHeight - rect.height then
+      rect.direction = 'up'
+    end
   end
 end
 
@@ -68,6 +71,10 @@ function love.keypressed(key)
     local fruit = table.remove(extraFruits, 1)
     if fruit == nil then fruit = '...' end
     table.insert(fruits, fruit)
+  elseif key == 'x' then
+    for _, rect in ipairs(rects) do
+      rect.direction = getRandomDirection()
+    end
   elseif key == 'space' then
     table.insert(rects, makeRectangle())
   elseif key == 'right' or key == 'left' or key == 'up' or key == 'down' then
