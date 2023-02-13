@@ -1,4 +1,5 @@
 require('util')
+tick = require "tick"
 
 function love.load()
   math.randomseed(os.time())
@@ -7,8 +8,7 @@ function love.load()
 
   rects = {makeRectangle(winWidth, winHeight)}
 
-  fruits = {'apples'}
-  extraFruits = {'bananas', 'cherry', 'durian', 'elderberry', 'fig', 'grape', 'honeydew'}
+  fruits = {}
 end
 
 function love.draw()
@@ -18,7 +18,7 @@ function love.draw()
   end
 
   love.graphics.setColor(0.7, 0.7, 1, 1)
-  love.graphics.print("Press 'f' to show more fruits", 10, 10)
+  love.graphics.print("Press 'f' to add a fruit", 10, 10)
 
   for i,fruit in ipairs(fruits) do
     love.graphics.print(fruit, 10, 30 + 20 * (i-1))
@@ -26,6 +26,8 @@ function love.draw()
 end
 
 function love.update(dt)
+  tick.update(dt)
+
   for _, rect in ipairs(rects) do
     rect.x = rect.x + rect.delta.x * dt
     rect.y = rect.y + rect.delta.y * dt
@@ -42,11 +44,23 @@ function love.update(dt)
   end
 end
 
+function updateFruitSlowly(index, fruit, counter)
+  if counter == nil then
+    fruits[index] = ''
+    counter = 1
+  end
+
+  if counter < #fruit then
+    fruits[index] = fruits[index] .. '.'
+    tick.delay(function () updateFruitSlowly(index, fruit, counter + 1) end, 0.5)
+  else
+    fruits[index] = fruit
+  end
+end
+
 function love.keypressed(key) 
   if key == 'f' then
-    local fruit = table.remove(extraFruits, 1)
-    if fruit == nil then fruit = '...' end
-    table.insert(fruits, fruit)
+    updateFruitSlowly(#fruits + 1, getRandomFruit())
   elseif key == 'x' then
     for _, rect in ipairs(rects) do
       rect.delta = polarToCartesian(rect.speed, math.random(0, 360))

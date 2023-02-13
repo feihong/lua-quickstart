@@ -23,3 +23,4 @@ Run game
 
 - [asdf-lua](https://github.com/Stratus3D/asdf-lua)
 - [LÖVE Getting Started](https://love2d.org/wiki/Getting_Started)
+- [How to LÖVE](https://sheepolution.com/learn/book/contents)
