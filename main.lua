@@ -1,12 +1,15 @@
-require('util')
+Object = require "classic"
+require 'util'
+require 'rectangle'
 tick = require "tick"
+
 
 function love.load()
   math.randomseed(os.time())
 
   winWidth, winHeight = love.graphics.getDimensions()
 
-  rects = {makeRectangle(winWidth, winHeight)}
+  rects = {Rectangle(winWidth, winHeight)}
 
   fruits = {}
 end
@@ -66,14 +69,14 @@ function love.keypressed(key)
       rect.delta = polarToCartesian(rect.speed, math.random(0, 360))
     end
   elseif key == 'space' then
-    table.insert(rects, makeRectangle(winWidth, winHeight))
+    table.insert(rects, Rectangle(winWidth, winHeight))
   elseif key == 'right' then
-    changeRectDeltas(0)
+    changeRectDeltas(rects, 0)
   elseif key == 'left' then
-    changeRectDeltas(180)
+    changeRectDeltas(rects, 180)
   elseif key == 'up' then
-    changeRectDeltas(270)
+    changeRectDeltas(rects, 270)
   elseif key == 'down' then
-    changeRectDeltas(90)
+    changeRectDeltas(rects, 90)
   end
 end
