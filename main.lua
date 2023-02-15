@@ -15,7 +15,6 @@ function love.load()
 end
 
 function love.draw()
-  love.graphics.setColor(1, 1, 1, 1)
   for _, rect in ipairs(rects) do
     rect:draw()
   end
