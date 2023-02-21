@@ -24,3 +24,5 @@ Run game
 - [asdf-lua](https://github.com/Stratus3D/asdf-lua)
 - [LÖVE Getting Started](https://love2d.org/wiki/Getting_Started)
 - [How to LÖVE](https://sheepolution.com/learn/book/contents)
+- [PICO-8 Education Edition](https://www.pico-8-edu.com/)
+- [PICO-8 Manual and Tutorials](https://www.lexaloffle.com/pico-8.php?page=resources)
