@@ -15,11 +15,25 @@ LÖVE
 - Download from https://love2d.org/
 - Add `alias love="/Applications/love.app/Contents/MacOS/love"` to your `.zprofile`
 
+PICO-8
+
+After downloading and installing, you should add this alias to your `~/.zprofile`:
+
+    alias pico="/Applications/PICO-8.app/Contents/MacOS/pico8"
+
 ## Commands
 
 Run game
 
     love .
+
+Load the poovaders cart in PICO-8
+
+    pico-8 poovaders.p8
+
+Copy .p8 cart files from their default location to the current directory:
+
+    cp ~/Library/Application\ Support/pico-8/carts/*.p8 .
 
 ## Links
 
